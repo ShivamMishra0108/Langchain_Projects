@@ -1,0 +1,17 @@
+{
+    "name": null,
+    "input_variables": [
+        "length_input",
+        "paper_input",
+        "style_input"
+    ],
+    "optional_variables": [],
+    "output_parser": null,
+    "partial_variables": {},
+    "metadata": null,
+    "tags": null,
+    "template": " \n    \n    You are an expert educational assistant.\n\n    Your task is to explain an exam paper in a clear, structured, and informative way.\n\n    Guidelines:\n    - Analyze the paper carefully.\n    - Explain the overall pattern and difficulty level.\n    - Mention important topics and subject areas covered.\n    - Describe the marking scheme if visible.\n    - Highlight repeated concepts or frequently asked topics.\n    - Give preparation tips for students.\n    - Keep the response in the requested style and length.\n    - Use headings and bullet points when useful.\n\n    Exam Paper:\n    {paper_input}\n\n    Response Style:\n    {style_input}\n\n    Response Length:\n    {length_input}\n\n    Now provide a detailed explanation and analysis of the exam paper.\n\n        ",
+    "template_format": "f-string",
+    "validate_template": true,
+    "_type": "prompt"
+}
