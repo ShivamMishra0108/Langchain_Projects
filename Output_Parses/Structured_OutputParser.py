@@ -1,0 +1,41 @@
+from langchain_google_genai import ChatGoogleGenerativeAI 
+from dotenv import load_dotenv
+from langchain_core.prompts import PromptTemplate
+from langchain_classic.output_parsers import StructuredOutputParser, ResponseSchema
+import os
+
+load_dotenv()
+
+model = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",  
+    google_api_key=os.getenv("GOOGLE_API_KEY"),
+)
+
+schema = [
+    ResponseSchema(name='fact_1', description="Fact 1 about the topic"),
+    ResponseSchema(name='fact_2',description="Fact 2 about the topic"),
+    ResponseSchema(name='fact_3',description="Fact 3 about the topic"),
+]
+parser = StructuredOutputParser.from_response_schemas(schema)
+
+template = PromptTemplate(
+    template="Give 3 facte about the {topic} \n {format_instruction}",
+    input_variables=['topic'],
+    partial_variables={'format_instruction':parser.get_format_instructions()}
+)
+
+prompt = template.invoke({'topic':'Black hole'})
+
+result = model.invoke(prompt)
+
+final_result = parser.parse(result.content)
+
+print(final_result)
+
+# VIA USING OF CHAIN
+
+chain = template | model | parser
+
+result = chain.invoke({'topic':'Black hole'})
+
+print(result)
