@@ -8,7 +8,7 @@ model = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 messages= [
     SystemMessage(content="You are a helpful assistant"),
-    HumanMessage(content="Tell me about langchain")
+    HumanMessage(content="Give a demo review of a new bought phone")
 ]
 
 result = model.invoke(messages)
