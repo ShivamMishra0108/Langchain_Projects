@@ -1,18 +1,22 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from typing import Literal, TypedDict, Annotated, Optional
+from pydantic import BaseModel, Field
 
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-2.5-flash')
 
-class Review(TypedDict):
+class Review(BaseModel):
 
-    key_themes: Annotated[list[str],"Write down all the key themes disscused in hte revies in a list"]
-    summary: Annotated[str,"Write a brief summary of the review"]
-    sentimnets: Annotated[Literal['pos', 'neg'], "Return sentiments of the review postive, negative or neutral"]
-    pros: Annotated[list[str], "Write all the pros inside a list"]
-    cons: Annotated[list[str], "Write all the cons inside a list"]
+    key_themes: list[str] = Field(description="Write down all the key themes disscused in hte revies in a list")
+    summary: str = Field(description="Write a brief summary of the review")
+    sentiments: Literal['pos', 'neg', 'neu'] = Field(
+        default='neu',
+        description="Return sentiments of the review: pos (positive), neg (negative) or neu (neutral)")
+    pros: Optional[list[str]] = Field(default=None, description="Write all the pros inside a list")
+    cons: Optional[list[str]] = Field(default=None, description="Write all the cons inside a list")
+    name: Optional[str] = Field(default=None, description="Write the name of the reviewer")
 
 structured_model = model.with_structured_output(Review)
 
@@ -49,4 +53,3 @@ result = structured_model.invoke("I recently bought the iPhone 16 Pro and after 
 
 
 print(result)
-print(result.keys())

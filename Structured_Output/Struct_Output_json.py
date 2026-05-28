@@ -1,20 +1,56 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from typing import Literal, TypedDict, Annotated, Optional
+from pydantic import BaseModel, Field
 
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-2.5-flash')
 
-class Review(TypedDict):
+json_schema = {
+    "title":"Review",
+    "type":"object",
+    "properties":{
+        "key_themes":{
+            "type":"array",
+            "items":{
+                "type":"string"
+            },
+            "description":"Write all the key themes of the review"
+        },
+        "summary":{
+            "type":"string",
+            "description":"Write the summary of the review"
+        },
+        "sentiments":{
+            "type":"string",
+            "enum":["pos","neg"],
+            "description":"Write the sentiments of the review either positive,negative or neutral"
+        },
+        "pros":{
+            "type":["array", "null"],
+            "item":{
+                "type":"string"
+            },
+            "description":"Write down all the pros in a list"
+        },
+        "cons":{
+            "type":["array", "null"],
+            "item":{
+                "type":"string"
+            },
+            "description":"Write down all the cons in a list"
+        },
+        "name":{
+            "type":["string", "null"],
+            "description":"Write the name of the reviewer"
+        }
+    },
+    "required":["key_themes","summary","sentiments"]
 
-    key_themes: Annotated[list[str],"Write down all the key themes disscused in hte revies in a list"]
-    summary: Annotated[str,"Write a brief summary of the review"]
-    sentimnets: Annotated[Literal['pos', 'neg'], "Return sentiments of the review postive, negative or neutral"]
-    pros: Annotated[list[str], "Write all the pros inside a list"]
-    cons: Annotated[list[str], "Write all the cons inside a list"]
+}
 
-structured_model = model.with_structured_output(Review)
+structured_model = model.with_structured_output(json_schema)
 
 result = structured_model.invoke("I recently bought the iPhone 16 Pro and after using it for a few days," 
 " my overall experience has been quite impressive, though there are a few drawbacks as well. The first thing that" 
@@ -49,4 +85,3 @@ result = structured_model.invoke("I recently bought the iPhone 16 Pro and after 
 
 
 print(result)
-print(result.keys())
