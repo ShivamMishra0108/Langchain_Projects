@@ -21,7 +21,7 @@ template = PromptTemplate(
 
 prompt = template.format()
 
-result = model.invoke(prompt)
+result = model.invoke(prompt)  # it will give a json object
 
 final_result = parser.parse(result.content)
 

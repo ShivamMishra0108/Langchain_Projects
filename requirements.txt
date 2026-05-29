@@ -26,5 +26,6 @@ pandas
 scikit-learn
 
 sentence-transformers
+grandalf
 
 
